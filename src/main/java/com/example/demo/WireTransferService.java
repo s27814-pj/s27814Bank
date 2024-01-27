@@ -22,6 +22,10 @@ public WireTransferOut makeWireTransfer(int idKlient, double amount){
     client = findClientByID(idKlient);
 
     if (client!=null){
+         if(!validateAmount(client, amount)) throw new RuntimeException("za male saldo");
+
+        //if(!validateAmount(client, amount)) return new WireTransferOut(Status.DECLINED_BY_CASH, client.getAmount());
+
         client.setAmount(client.getAmount()-amount);
         wire.setTransferStatus(Status.ACCEPTED);
     }
@@ -29,6 +33,7 @@ public WireTransferOut makeWireTransfer(int idKlient, double amount){
         wire.setTransferStatus(Status.DECLINED);
 
     }
+    wireTransferStorage.addWireTransfer(wire);
     return new WireTransferOut(wire.getTransferStatus(), client.getAmount());
 }
 
@@ -41,7 +46,7 @@ public WireTransferOut makeWireTransfer(int idKlient, double amount){
             }
         }
             if (client ==null){
-                throw new NoSuchElementException("Brak zarestrowanego klienta z id" + id);
+                throw new NoSuchElementException("Brak zarestrowanego klienta z id " + id);
             }
             else return client;
     }
@@ -56,5 +61,9 @@ public WireTransferOut makeWireTransfer(int idKlient, double amount){
     public String getClientData(int id){
     Client client = findClientByID(id);
     return client.getClientData();
+    }
+
+    public boolean validateAmount(Client client, double amount){
+        return client.getAmount() >= amount;
     }
 }

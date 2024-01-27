@@ -30,10 +30,10 @@ class WireTransferServiceTest {
 
     @Test
     void shouldFindClientById(){
-        Client client = new Client(25,"dom");
+        Client client = new Client(25,"dom",10);
         clientStorage.addClient(client);
 
-        assertThat(wireTransferService.findClientByID(0)).isEqualTo(client);
+        assertThat(wireTransferService.findClientByID(10)).isEqualTo(client);
     }
     @Test
     void shouldNotFindClientById(){
@@ -42,11 +42,17 @@ class WireTransferServiceTest {
 
     @Test
     void shouldLowerAmount(){
-        Client client = new Client(25,"dom");
+        Client client = new Client(25,"dom",10);
         clientStorage.addClient(client);
-        wireTransferService.makeWireTransfer(0,5);
+        wireTransferService.makeWireTransfer(10,5);
 
         assertThat(client.getAmount()).isEqualTo(20.0);
     }
-
+    @Test
+    void shouldBeSuccessStatus(){
+        Client client = new Client(25,"dom",10);
+        clientStorage.addClient(client);
+        WireTransferOut out = wireTransferService.makeWireTransfer(10,5);
+        assertThat(out.getWireTransferOutStatus()).isEqualTo(Status.ACCEPTED);
+    }
 }

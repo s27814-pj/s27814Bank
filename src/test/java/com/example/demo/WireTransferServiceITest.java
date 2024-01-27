@@ -23,12 +23,32 @@ class WireTransferServiceITest {
 
     @Test
     void shouldFindClientById(){
-        Client client = new Client(10,"test");
+        Client client = new Client(10,"test",10);
         List<Client> clientList= new ArrayList<>();
         clientList.add(client);
         when(clientStorage.getClientStorageList()).thenReturn(clientList);
 
-        assertThat(wireTransferService.findClientByID(0)).isEqualTo(client);
+        assertThat(wireTransferService.findClientByID(10)).isEqualTo(client);
+    }
+
+    @Test
+    void shouldNotLowerBelow0(){
+        Client client = new Client(20, "testw",10);
+        List<Client> clientList= new ArrayList<>();
+        clientList.add(client);
+        when(clientStorage.getClientStorageList()).thenReturn(clientList);
+
+        assertThrows(RuntimeException.class, ()-> wireTransferService.makeWireTransfer(10,100));
+    }
+
+    @Test
+    void shouldLowerAmount(){
+        Client client = new Client(20, "testw",10);
+        List<Client> clientList= new ArrayList<>();
+        clientList.add(client);
+        when(clientStorage.getClientStorageList()).thenReturn(clientList);
+        WireTransferOut out =wireTransferService.makeWireTransfer(10,1);
+        assertThat(out.getAmount()).isEqualTo(19.0);
     }
 
 }

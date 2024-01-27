@@ -13,6 +13,12 @@ public class Client {
         this.otherData=otherData;
     }
 
+    public Client(double amount, String otherData, int id){
+        this.id=id;
+        this.amount=amount;
+        this.otherData=otherData;
+    }
+
     public int getId() {
         return id;
     }
