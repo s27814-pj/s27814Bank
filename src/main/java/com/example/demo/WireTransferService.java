@@ -54,11 +54,11 @@ public WireTransferOut makeWireTransfer(int idClient, double amount){
             else return client;
     }
 
-    public Optional<Client> pleaseFindClientById(int id){
-    return clientStorage.getClientStorageList().stream()
-            .filter(id -> Integer.valueOf(id.getId()).equals(id))
-            .findFirst();
-    }
+//    public Optional<Client> pleaseFindClientById(int id){
+//    return clientStorage.getClientStorageList().stream()
+//            .filter(id -> Integer.valueOf(id.getId()).equals(id))
+//            .findFirst();
+//    }
 
     public WireTransferOut addMoney(int idClient, int amount){
     Client client = findClientByID(idClient);
