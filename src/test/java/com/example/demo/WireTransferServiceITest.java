@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +33,15 @@ class WireTransferServiceITest {
     }
 
     @Test
+    void shouldNotFindClientById(){
+        Client client = new Client(10,"test",10);
+        List<Client> clientList= new ArrayList<>();
+        clientList.add(client);
+        when(clientStorage.getClientStorageList()).thenReturn(clientList);
+        assertThrows(NoSuchElementException.class, () -> wireTransferService.findClientByID(0));
+    }
+
+    @Test
     void shouldNotLowerBelow0(){
         Client client = new Client(20, "testw",10);
         List<Client> clientList= new ArrayList<>();
@@ -49,6 +59,16 @@ class WireTransferServiceITest {
         when(clientStorage.getClientStorageList()).thenReturn(clientList);
         WireTransferOut out =wireTransferService.makeWireTransfer(10,1);
         assertThat(out.getAmount()).isEqualTo(19.0);
+    }
+
+    @Test
+    void shouldNotAddMoney(){
+        Client client = new Client(20, "testw",10);
+        List<Client> clientList= new ArrayList<>();
+        clientList.add(client);
+        when(clientStorage.getClientStorageList()).thenReturn(clientList);
+        assertThrows(NoSuchElementException.class, () ->wireTransferService.addMoney(110,10));
+
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.demo;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class WireTransferService {
@@ -14,12 +15,14 @@ public WireTransferService(WireTransferStorage wireTransferStorage, ClientStorag
     this.clientStorage=clientStorage;
 }
 
-public WireTransferOut makeWireTransfer(int idKlient, double amount){
+public WireTransferOut makeWireTransfer(int idClient, double amount){
 
-    WireTransfer wire = new WireTransfer(idKlient, amount);
+    WireTransfer wire = new WireTransfer(idClient, amount);
     Client client=null;
 
-    client = findClientByID(idKlient);
+    client = findClientByID(idClient);
+    //if (pleaseFindClientById(idClient).isEmpty())
+
 
     if (client!=null){
          if(!validateAmount(client, amount)) throw new RuntimeException("za male saldo");
@@ -49,6 +52,12 @@ public WireTransferOut makeWireTransfer(int idKlient, double amount){
                 throw new NoSuchElementException("Brak zarestrowanego klienta z id " + id);
             }
             else return client;
+    }
+
+    public Optional<Client> pleaseFindClientById(int id){
+    return clientStorage.getClientStorageList().stream()
+            .filter(id -> Integer.valueOf(id.getId()).equals(id))
+            .findFirst();
     }
 
     public WireTransferOut addMoney(int idClient, int amount){
